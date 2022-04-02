@@ -47,9 +47,13 @@ app.get('/list', function(request, answer){
     
 });
 
-app.post('/add', function (request, answer) {
-    db.collection('post').insertOne({title : request.body.title, date : request.body.date }, function(){
-        console.log('저장완료');
+app.post('/add', function(요청, 응답){
+    db.collection('counter').findOne({name : '게시물갯수'}, function(에러, 결과){
+      var 총게시물갯수 = 결과.totalPost;
+      db.collection('post').insertOne( { _id : (총게시물갯수 + 1), 제목 : 요청.body.title, 날짜 : 요청.body.date } , function(){
+        console.log('저장완료')
+        응답.send('전송완료');
+      });
     });
-});
-
+    
+  });
