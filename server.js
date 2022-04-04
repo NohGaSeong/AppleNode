@@ -47,6 +47,20 @@ app.get('/list', function(request, answer){
     
 });
 
+
+app.delete('/delete', function(요청,응답){
+    console.log(요청.body);
+    요청.body._id = parseInt(요청.body._id);
+    // 요청.body에 담겨온 게시물번호를 가진 글을 db에서 찾아서 삭제해주세요.
+    db.collection('post').deleteOne(요청.body, function(에러,결과){
+        console.log('삭제완료');
+
+    });
+});
+
+
+
+
 // 누가 폼에서 /add post 로 요청하면
 // db counter 내의 게시물갯수 라는 이름을 가진 것?을 찾음.
 // 게시물 갯수를 변수에 저장.
