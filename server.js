@@ -54,7 +54,7 @@ app.delete('/delete', function(요청,응답){
     // 요청.body에 담겨온 게시물번호를 가진 글을 db에서 찾아서 삭제해주세요.
     db.collection('post').deleteOne(요청.body, function(에러,결과){
         console.log('삭제완료');
-
+        응답.status(200).send({ message : '성공했습니다.'}); //200은 일반적으로 응답이 성공했다 ~ 이런 뜻임.
     });
 });
 
@@ -83,7 +83,7 @@ app.post('/add', function(요청, 응답){
         //counter 라는 콜렉션에 있는 totalPost 라는 항목도 1 증가시켜야함 (수정);
         db.collection('counter').updateOne({name:'게시물갯수'},{ $inc : {totalPost:1} },function(error, result){
             if(error){return console.log(error)}
-
+            
         });
       });
 
