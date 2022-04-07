@@ -58,7 +58,18 @@ app.delete('/delete', function(요청,응답){
     });
 });
 
+            // /뒤에 문자열 적으면 아래것을 실행시켜주세요.
+            // URL 의 파라미터라고합니다.
+app.get('/detail/:id', function(요청,응답){
+                              // 파라미터 중 :id 라는 뜻
+    db.collection('post').findOne({_id : parseInt(요청.params.id)}, function(에러, 결과){
+        console.log(결과)
+        응답.render('detail.ejs', { data : 결과 });
 
+    })
+    
+
+})
 
 
 // 누가 폼에서 /add post 로 요청하면
