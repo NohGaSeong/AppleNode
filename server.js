@@ -35,8 +35,9 @@ app.get('/', function (request, answer) {
     answer.sendFile(__dirname + '/index.html');
 });
 
+
 app.get('/write', function (request, answer) {
-    answer.sendFile(__dirname + '/write.html');
+    answer.render(__dirname + '/write.html');
 });
 
 app.get('/list', function(request, answer){
@@ -73,7 +74,9 @@ app.get('/detail/:id', function(요청,응답){
 
 })
 
-
+app.get('/edit', function(request,answer){
+    answer.render('edit.ejs')
+})
 // 누가 폼에서 /add post 로 요청하면
 // db counter 내의 게시물갯수 라는 이름을 가진 것?을 찾음.
 // 게시물 갯수를 변수에 저장.
