@@ -4,6 +4,10 @@ const bodyParser = require('body-parser')
 
 const MongoClient = require('mongodb').MongoClient;
 
+//html(ejs) 파일에서 put 요청을 하기 위한 코드 2줄
+const methodOverride = require('method-overrid');
+app.use(methodOverride('_method'))
+
 app.use('/public', express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.set('view engine', 'ejs');
@@ -37,7 +41,7 @@ app.get('/', function (request, answer) {
 
 
 app.get('/write', function (request, answer) {
-    answer.render(__dirname + '/write.html');
+    answer.render('write.ejs'); 
 });
 
 app.get('/list', function(request, answer){
@@ -74,8 +78,11 @@ app.get('/detail/:id', function(요청,응답){
 
 })
 
-app.get('/edit', function(request,answer){
-    answer.render('edit.ejs')
+app.get('/edit/:id', function(request,answer){
+    db.collection('post').findOne({_id: parseInt(request.params.id)}, function(error,result){
+        answer.render('edit.ejs', { post : result })
+    })
+    
 })
 // 누가 폼에서 /add post 로 요청하면
 // db counter 내의 게시물갯수 라는 이름을 가진 것?을 찾음.
