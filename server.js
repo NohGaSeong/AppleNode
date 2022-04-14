@@ -73,7 +73,7 @@ app.get('/detail/:id', function(요청,응답){
         console.log(결과)
         응답.render('detail.ejs', { data : 결과 });
 
-    })
+    });
     
 
 })
@@ -81,7 +81,7 @@ app.get('/detail/:id', function(요청,응답){
 app.get('/edit/:id', function(request,answer){
     db.collection('post').findOne({_id: parseInt(request.params.id)}, function(error,result){
         answer.render('edit.ejs', { post : result })
-    })
+    });
     
 })
 // 누가 폼에서 /add post 로 요청하면
