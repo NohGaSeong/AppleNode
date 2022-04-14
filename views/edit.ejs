@@ -13,10 +13,11 @@
   <h4 class="container mt-4"><strong>글 작성페이지</strong></h4>
 
   <div class="container mt-2">
-                        //이러면 html(ejs)에서 put 요청이 가능함. (server.js 상단에 넣은 코드 2줄 필수)
-    <form action = "/add?_method=PUT" method="POST"> <!--꼭 있어야하는 2가지-->
+                        <!--이러면 html(ejs)에서 put 요청이 가능함. (server.js 상단에 넣은 코드 2줄 필수)-->
+    <form action = "/edit ?_method=PUT" method="POST"> <!--꼭 있어야하는 2가지-->
       <div class="form-group">
         <label>오늘의 할일</label>
+        <input type = "text" value = "<%= post._id %>"   name = "id" style = "display: none;"></input>
         <input value="<%= post.제목 %>" type="text" class="form-control" name = "title">
       </div>
       <div class="form-group">

@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const MongoClient = require('mongodb').MongoClient;
 
 //html(ejs) 파일에서 put 요청을 하기 위한 코드 2줄
-const methodOverride = require('method-overrid');
+const methodOverride = require('method-override');
 app.use(methodOverride('_method'))
 
 app.use('/public', express.static('public'))
@@ -80,9 +80,22 @@ app.get('/detail/:id', function(요청,응답){
 
 app.get('/edit/:id', function(request,answer){
     db.collection('post').findOne({_id: parseInt(request.params.id)}, function(error,result){
+        console.log(result);
         answer.render('edit.ejs', { post : result })
     });
     
+})
+
+app.put('/edit', function(request,answer){
+    // 어떤 사람이 /edit 경로로 요청을 했다.
+    // 폼에 담긴 제목,날짜 데이터를 가지고 db.collection 에다가 업데이트를 해줌.
+                        //findOne 이랑은 다르게 업데이트를 해준다는 개념임.
+                        //첫번째 데이터를 찾아서 두번째 데이터로 업데이트 시켜주세요 ~ 이런 느낌.
+    db.collection('post').updateOne({ _id : parseInt(request.body.id) }, { $set : { 제목:request.body.title, 날짜 : request.body.date} }, function(error, result){
+        console.log('수정완료');
+        answer.redirect('/list');
+    });
+
 })
 // 누가 폼에서 /add post 로 요청하면
 // db counter 내의 게시물갯수 라는 이름을 가진 것?을 찾음.
@@ -113,5 +126,5 @@ app.post('/add', function(요청, 응답){
 
 
     });
-    
+     
   });
