@@ -93,6 +93,7 @@ app.put('/edit', function(request,answer){
                         //첫번째 데이터를 찾아서 두번째 데이터로 업데이트 시켜주세요 ~ 이런 느낌.
     db.collection('post').updateOne({ _id : parseInt(request.body.id) }, { $set : { 제목:request.body.title, 날짜 : request.body.date} }, function(error, result){
         console.log('수정완료');
+        //안되는 이유가 뭘까? 흐으음.. 영상을 보지 않고 스스로의 힘으로 해결해보도록하자.
         answer.redirect('/list');
     });
 
@@ -108,7 +109,7 @@ app.post('/add', function(요청, 응답){
     응답.send('전송완료');
     db.collection('counter').findOne({name : '게시물갯수'}, function(에러, 결과){
       var 총게시물갯수 = 결과.totalPost;
-      
+       
       db.collection('post').insertOne( { _id : (총게시물갯수 + 1), 제목 : 요청.body.title, 날짜 : 요청.body.date } , function(){
         console.log('저장완료')
 
@@ -118,7 +119,7 @@ app.post('/add', function(요청, 응답){
 
         //counter 라는 콜렉션에 있는 totalPost 라는 항목도 1 증가시켜야함 (수정);
         db.collection('counter').updateOne({name:'게시물갯수'},{ $inc : {totalPost:1} },function(error, result){
-            if(error){return console.log(error)}
+            if(error){ return console.log(error)}
             
         });
       });
