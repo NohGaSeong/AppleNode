@@ -129,3 +129,47 @@ app.post('/add', function(요청, 응답){
     });
      
   });
+
+
+// session 방식 로그인 기능 구현
+const passport = require('passport');
+const localStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+const { localsName } = require('ejs');
+
+// app.use(미들웨어) : 요청 - 응답 중간에 뭔가 실행되는 코드
+app.use(session({secret : '비밀코드', resave : true , saveUninitialized : false}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('/login', function(request,answer){
+    answer.render('login.ejs');
+});
+                //pastport : 로그인 기능을 쉽게 도와주는 라이브러리
+app.post('/login', passport.authenticate('local', {
+    //실패하면 fail 경로로 이동시켜주세요
+    failureRedirect : '/fail'
+}), function(request,answer){
+    answer.redirect('/');
+});
+
+passport.use(new localStrategy({
+    // 유저가 입력한 아이디/비번 항목이 뭔지 정의(name 속성)
+    usernameField : 'id',
+    passwordField : 'pw',
+    // 로그인후 세션정보를 저장할 것인지, 아래는 특수한 경우라서 false (아이디 비번 말고도 다른 정보를 검사하는거임)
+    session : true,
+    passReqToCallback: false,
+}), function(inputId, inputPw, done){
+    console.log(inputId, inputPw);
+    db.collection('login').findOne({id : inputId}, function(error, result){
+        if (error) return done(error)
+        if (!result) return done(null, false, {message : '존재하지 않는 아이디에요.'})
+        if (inputPw == result.pw){
+            return done(null, 결과)
+        } else{
+            return done(null, false, {message : '비밀번호를 다시 입력해주세요.'})
+        }
+    })
+});
+
