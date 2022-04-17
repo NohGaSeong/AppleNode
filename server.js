@@ -153,6 +153,7 @@ app.post('/login', passport.authenticate('local', {
     answer.redirect('/');
 });
 
+// 1. 누가 로그인하면 local 방식으로 아이디/비번 인증
 passport.use(new localStrategy({
     // 유저가 입력한 아이디/비번 항목이 뭔지 정의(name 속성)
     usernameField : 'id',
@@ -160,8 +161,9 @@ passport.use(new localStrategy({
     // 로그인후 세션정보를 저장할 것인지, 아래는 특수한 경우라서 false (아이디 비번 말고도 다른 정보를 검사하는거임)
     session : true,
     passReqToCallback: false,
-}), function(inputId, inputPw, done){
+}, function(inputId, inputPw, done){
     console.log(inputId, inputPw);
+    // 2. 이쪽이 인증하는 코드
     db.collection('login').findOne({id : inputId}, function(error, result){
         if (error) return done(error)
         if (!result) return done(null, false, {message : '존재하지 않는 아이디에요.'})
@@ -171,5 +173,15 @@ passport.use(new localStrategy({
             return done(null, false, {message : '비밀번호를 다시 입력해주세요.'})
         }
     })
+}));
+
+// 3. 인증성공하면 세션, 쿠키 만들어줌
+// Id 를 이용하여 session 을 저장시키는 코드 (로그인 성공시 실행)
+passport.serializeUser(function(user,done){
+    done(null, user.id)
 });
 
+// 이 session 데이터를 가진 사람을 DB 에서 찾아주세요
+passport.deserializeUser(function(id, done){
+    done(null, {})
+})
