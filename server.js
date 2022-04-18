@@ -153,6 +153,23 @@ app.post('/login', passport.authenticate('local', {
     answer.redirect('/');
 });
 
+
+app.get('/mypage', function(request, answer){
+    answer.render('mypage.ejs')
+
+});
+
+// 미들웨어 만드는법    
+function Loging(request,answer, next){
+    // 로그인 후 세션이 있으면 요청.user 이 항상 있음. 
+    if (request.user){
+        next()
+    } else {
+        answer.send('로그인만 하셨는데용');
+    }
+}
+
+
 // 1. 누가 로그인하면 local 방식으로 아이디/비번 인증
 passport.use(new localStrategy({
     // 유저가 입력한 아이디/비번 항목이 뭔지 정의(name 속성)
