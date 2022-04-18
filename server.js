@@ -56,8 +56,26 @@ app.get('/list', function(request, answer){
 
                 // 신문법(?) 한번 써봤음. 이걸로 쓰자 앞으로.
 app.get('/search', (요청, 응답)=>{
-    console.log(요청.query);
-    db.collection('post').find({제목 : 요청.query.value}).toArray((에러, 결과)=>{
+    // text index 만들어두면 '빠른검색', 'or검색가능', '-제외 가능', "정확히 일치하는 것만" 등의 검색을 시행 가능
+    // 근데 띄어쓰기를 기준으로해서 조금 하자가 있음. (= 한중일 언어에선 쓰읍..)
+    // 해결책 : 쓰지말던가, 검색할 문서의 양을 제한두기, text index 를 다르게 만들기 (현재 상황에선 불가), 지금 사용하고 있는 index 를 버리자. 그리고 search index 를 사용하자.
+    var 검색조건 = [
+        {
+          $search: {
+            index: 'titleSearch',
+            text: {
+              query: 요청.query.value,
+              path: ['제목', '날짜']
+            }
+          }
+        },
+       
+        // 검색조건 더 주는 법 : searchScroe 
+        // { $project : { 제목 : 1 , _id : 1, score: { $meta : "searchScore" } } }
+        { $sort : {_id : 1 } },
+        { $limit : 10 }
+    ] 
+    db.collection('post').aggregate(검색조건).toArray((에러, 결과)=>{
     console.log(결과)
     응답.render('search.ejs', {posts : 결과})
     })
