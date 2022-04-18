@@ -186,7 +186,7 @@ passport.use(new localStrategy({
         if (error) return done(error)
         if (!result) return done(null, false, {message : '존재하지 않는 아이디에요.'})
         if (inputPw == result.pw){
-            return done(null, 결과)
+            return done(null, result)
         } else{
             return done(null, false, {message : '비밀번호를 다시 입력해주세요.'})
         }
