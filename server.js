@@ -36,7 +36,7 @@ MongoClient.connect('mongodb+srv://Gaseong:q2ewrq2ewr@cluster0.qney5.mongodb.net
 
 
 app.get('/', function (request, answer) {
-    answer.sendFile(__dirname + '/index.html');
+    answer.render('index.ejs');
 });
 
 
@@ -154,8 +154,9 @@ app.post('/login', passport.authenticate('local', {
 });
 
 
-app.get('/mypage', function(request, answer){
-    answer.render('mypage.ejs')
+app.get('/mypage', Loging, function(request, answer){
+    console.log(request.user);
+    answer.render('mypage.ejs', {사용자 : request.user})
 
 });
 
@@ -199,6 +200,9 @@ passport.serializeUser(function(user,done){
 });
 
 // 이 session 데이터를 가진 사람을 DB 에서 찾아주세요
-passport.deserializeUser(function(id, done){
-    done(null, {})
+passport.deserializeUser(function(아이디, done){
+    db.collection('login').findOne({id: 아이디}, function(error,result){
+        done(null, result)
+    })
+   
 })
