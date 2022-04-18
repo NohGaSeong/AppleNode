@@ -55,13 +55,12 @@ app.get('/list', function(request, answer){
 });
 
                 // 신문법(?) 한번 써봤음. 이걸로 쓰자 앞으로.
-app.get('/search', (request, answer) => {
-    console.log(request.query.value);
-    db.collection('post').find({제목 : request.query.value}).toArray((error, result)=> {
-        console.log(result)
-        응답.render()
+app.get('/search', (요청, 응답)=>{
+    console.log(요청.query);
+    db.collection('post').find({제목 : 요청.query.value}).toArray((에러, 결과)=>{
+    console.log(결과)
+    응답.render('search.ejs', {posts : 결과})
     })
-
 })
 
 app.delete('/delete', function(요청,응답){
